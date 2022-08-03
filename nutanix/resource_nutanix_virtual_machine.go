@@ -21,7 +21,7 @@ import (
 )
 
 var (
-	vmTimeout    = 1 * time.Minute
+	vmTimeout    = 10 * time.Minute
 	vmDelay      = 3 * time.Second
 	vmMinTimeout = 3 * time.Second
 	IDE          = "IDE"
