@@ -2,7 +2,7 @@
 
 Terraform provider plugin to integrate with Nutanix Enterprise Cloud
 
-NOTE: The latest version of the Nutanix provider is [v1.6.1](https://github.com/nutanix/terraform-provider-nutanix/releases/tag/v1.6.1)
+NOTE: The latest version of the Nutanix provider is [v1.7.0](https://github.com/nutanix/terraform-provider-nutanix/releases/tag/v1.7.0)
 
 Modules based on Terraform Nutanix Provider can be found here : [Modules](https://github.com/nutanix/terraform-provider-nutanix/tree/master/modules)
 ## Build, Quality Status
@@ -42,9 +42,13 @@ The Terraform Nutanix provider is designed to work with Nutanix Prism Central an
 
 > For the 1.6.1 release of the provider it will have N-2 compatibility with the Prism Central APIs. This release was tested against Prism Central versions pc2022.4 pc2022.1.0.2 and pc2021.9.0.4.
 
+> For the 1.7.0 release of the provider it will have N-2 compatibility with the Prism Central APIs. This release was tested against Prism Central versions pc2022.6, pc2022.4 and pc2022.1.0.2.
+
 ### note
 With v1.6.1 release of flow networking feature in provider, IAMv2 setups would be mandate. 
 Also, there is known issue for access_control_policies resource where update would be failing. We are continuously tracking the issue internally.
+
+with v1.7.0 release of user groups feature in provider, pc version should be minimum 2022.1 to support organisational and saml user group. 
 
 ## Foundation
 > For the 1.5.0-beta release of the provider it will have N-1 compatibility with the Foundation. This release was tested against Foundation versions v5.2 and v5.1.1
@@ -152,6 +156,7 @@ From foundation getting released in 1.5.0-beta, provider configuration will acco
 * nutanix_pbr
 * nutanix_static_routes
 * nutanix_floating_ip
+* nutanix_user_groups
 
 ## Data Sources
 
@@ -254,6 +259,46 @@ $ make cibuild
 
 This command will create a `pkg/` directory with all the binaries for the most popular OS.
 
+### Running tests of provider
+
+For running unit tests:
+```sh
+make test
+```
+
+For running integration tests:
+
+1. Add environment variables for setup related details:
+```ssh
+export NUTANIX_USERNAME="<username>"
+export NUTANIX_PASSWORD="<password>"
+export NUTANIX_INSECURE=true
+export NUTANIX_PORT=9440
+export NUTANIX_ENDPOINT="<pc-ip>"
+export NUTANIX_STORAGE_CONTAINER="<storage-container-uuid-for-vm-tests>"
+export FOUNDATION_ENDPOINT="<foundation-vm-ip-for-foundation-related-tests>"
+export FOUNDATION_PORT=8000
+export NOS_IMAGE_TEST_URL="<test-image-url>"
+```
+
+2. Some tests need setup related constants for resource creation. So add/replace details in test_config.json (for pc tests) and test_foundation_config.json (for foundation and foundation central tests)
+
+3. To run all tests:
+```ssh
+make testacc
+```
+
+4. To run specific tests:
+```ssh 
+export TESTARGS='-run=TestAccNutanixPbr_WithSourceExternalDestinationNetwork'
+make testacc
+```
+
+5. To run collection of tests:
+``` ssh
+export TESTARGS='-run=TestAccNutanixPbr*'
+make testacc
+```
 
 ### Common Issues using the development binary.
 
